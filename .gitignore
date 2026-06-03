@@ -1,0 +1,16 @@
+# .gitignore
+venv/
+test_env/
+dist/
+build/
+*.egg-info/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.whl
+*.tar.gz
+test_policy.yaml
+test_load.py
+test_guards.py
+test_pipeline.py
+test_readme.py
