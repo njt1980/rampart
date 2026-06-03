@@ -1,0 +1,37 @@
+# Virtual environments
+venv/
+test_env/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Wheel and distribution files
+*.whl
+*.tar.gz
+
+# Throwaway test scripts
+test_policy.yaml
+test_load.py
+test_guards.py
+test_pipeline.py
+test_readme.py
+
+# Claude artifacts
+.claude/
+ADR-001-enterprise-llm-guard.md
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

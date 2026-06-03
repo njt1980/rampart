@@ -1,0 +1,48 @@
+version: "1.0.0"
+description: "Banking application guardrail policy"
+
+profiles:
+
+  customer_support:
+    input:
+      - guard: PiiGuard
+        module: rampart.guards.pii
+        engine: classifier
+        action: block
+        config:
+          entities: [CREDIT_CARD, AADHAAR, PAN, PHONE_NUMBER, EMAIL_ADDRESS]
+
+      - guard: PromptInjectionGuard
+        module: rampart.guards.prompt_injection
+        engine: classifier
+        action: block
+        config:
+          threshold: 0.8
+
+    output:
+      - guard: PiiGuard
+        module: rampart.guards.pii
+        engine: classifier
+        action: redact
+        config:
+          entities: [CREDIT_CARD, AADHAAR, PAN]
+
+  internal_analyst:
+    input:
+      - guard: PromptInjectionGuard
+        module: rampart.guards.prompt_injection
+        engine: classifier
+        action: block
+        config:
+          threshold: 0.9
+      # No PiiGuard — analysts work with real customer data
+
+  kyc_onboarding:
+    input:
+      - guard: PiiGuard
+        module: rampart.guards.pii
+        engine: classifier
+        action: block
+        config:
+          entities: [CREDIT_CARD]
+          # PAN and AADHAAR not listed — required for KYC, permitted
