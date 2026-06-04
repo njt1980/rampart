@@ -255,16 +255,16 @@ Audit logs go to stdout by default, ready to pipe into CloudWatch, Splunk, or an
 
 ```bash
 # Core package
-pip install rampart
+pip install rampart-llm
 
 # With AWS Bedrock support
-pip install rampart[bedrock]
+pip install rampart-llm[bedrock]
 
 # With Snowflake Cortex support
-pip install rampart[cortex]
+pip install rampart-llm[cortex]
 
 # With both
-pip install rampart[bedrock,cortex]
+pip install rampart-llm[bedrock,cortex]
 ```
 
 > **Note on first run:** Rampart's built-in guards use local ML models (Microsoft Presidio and LLM Guard). These models — approximately 300MB total — are downloaded automatically on first use and cached locally. No data is sent to any external service during this download or during scanning.
