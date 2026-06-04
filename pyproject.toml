@@ -4,11 +4,11 @@ build-backend = "hatchling.build"
 
 [project]
 name = "rampart-llm"
-version = "0.1.1"
+version = "0.1.2"
 description = "Policy-as-code guardrail enforcement for enterprise LLM applications"
 readme = "README.md"
 license = { text = "MIT" }
-requires-python = ">=3.10,<3.13"
+requires-python = ">=3.10"
 keywords = ["llm", "guardrails", "policy", "security", "pii", "ai-safety"]
 classifiers = [
     "Development Status :: 3 - Alpha",
@@ -17,6 +17,7 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Security",
 ]
