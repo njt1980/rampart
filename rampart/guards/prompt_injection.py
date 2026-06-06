@@ -2,7 +2,7 @@
 rampart/guards/prompt_injection.py
 
 Prompt injection detection guard with three configurable engine modes:
-  - classifier: uses the llm-guard DeBERTa-based PromptInjection scanner
+  - classifier: uses a local DeBERTa-based prompt-injection classifier
   - hybrid: classifier with automatic LLM escalation in an uncertainty band
   - llm: pure LLM-based detection via an LLMJudge instance
 
@@ -22,9 +22,10 @@ class PromptInjectionGuard(BaseGuard):
 
     Three engine modes are supported:
 
-    - **classifier** (default): Uses the llm-guard DeBERTa-v3 based
-      PromptInjection scanner. Fast and runs locally without cloud calls.
-      Configurable via ``threshold`` (default 0.8).
+    - **classifier** (default): Uses a local DeBERTa-v3 based
+      prompt-injection classifier (protectai/deberta-v3-base-prompt-injection-v2).
+      Fast and runs locally without cloud calls. Configurable via
+      ``threshold`` (default 0.8).
 
     - **hybrid**: Runs the classifier first. If the confidence score falls
       within the ``uncertainty_band`` (default [0.4, 0.8]), the LLM judge
@@ -53,24 +54,26 @@ class PromptInjectionGuard(BaseGuard):
         self._scanner: Any = None
 
     def _ensure_classifier_loaded(self) -> None:
-        """Import and initialise the llm-guard PromptInjection scanner.
+        """Load the local DeBERTa-based prompt-injection classifier.
 
-        The DeBERTa model is downloaded on first use and cached by the
-        llm-guard library. Subsequent calls are fast.
+        The model is downloaded from the Hugging Face Hub on first use and
+        cached locally by `transformers`. Subsequent calls are fast.
 
         Raises:
-            ImportError: If llm-guard is not installed.
+            ImportError: If transformers/torch are not installed.
         """
         if self._scanner is not None:
             return
         try:
-            from llm_guard.input_scanners import PromptInjection
-        except ImportError:
-            raise ImportError(
-                "llm-guard is required for PromptInjectionGuard. "
-                "Install with: pip install llm-guard"
+            from rampart.guards._prompt_injection_classifier import (
+                PromptInjectionClassifier,
             )
-        self._scanner = PromptInjection()
+        except ImportError as exc:
+            raise ImportError(
+                "transformers and torch are required for PromptInjectionGuard. "
+                "Install with: pip install transformers torch"
+            ) from exc
+        self._scanner = PromptInjectionClassifier()
 
     def scan(self, text: str, context: dict) -> GuardResult:
         """Dispatch to the appropriate scan method based on engine mode.
