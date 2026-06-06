@@ -43,7 +43,7 @@ That is the entire integration. The policy file does the rest.
 ### Input guards — before the LLM sees the message
 
 - **PII detection** — detect and block or redact credit cards, Aadhaar, PAN, phone numbers, emails, and more. Powered by Microsoft Presidio. No LLM required.
-- **Prompt injection detection** — catch attempts to override system prompts or hijack model behaviour. Powered by LLM Guard classifiers. No LLM required.
+- **Prompt injection detection** — catch attempts to override system prompts or hijack model behaviour. Powered by a local DeBERTa-v3 classifier (ProtectAI's `deberta-v3-base-prompt-injection-v2`, run via Hugging Face `transformers`). No LLM required.
 - *(More built-in guards coming in v0.2)*
 
 ### Output guards — before your application sees the response
@@ -157,20 +157,10 @@ This section walks you through everything from installation to your first workin
 
 ### Step 1: Check Your Python Version
 
-Rampart requires Python 3.10, 3.11, or 3.12. Python 3.11 is recommended.
+Rampart supports Python 3.10 through 3.13.
 
 ```bash
 python --version
-```
-
-If you see Python 3.13 or higher, install Python 3.11 first:
-
-```bash
-# Windows
-winget install Python.Python.3.11
-
-# Mac
-brew install python@3.11
 ```
 
 ### Step 2: Install Rampart
@@ -423,8 +413,7 @@ response = client.invoke(..., profile="internal_fraud_team")
 
 | Requirement | Detail |
 |---|---|
-| Python version | 3.10, 3.11, or 3.12 — Python 3.11 recommended |
-| Python 3.13 | Not yet supported — upstream wheel unavailable |
+| Python version | 3.10, 3.11, 3.12, or 3.13 |
 | First-run download | ~780MB ML models, one-time, cached locally |
 | Internet on first run | Required for model download from HuggingFace Hub |
 | Corporate networks | Ensure `huggingface.co` is reachable through your proxy |
@@ -548,9 +537,9 @@ pip install rampart-llm[cortex]
 pip install rampart-llm[bedrock,cortex]
 ```
 
-> **Note on first run:** Rampart's built-in guards use local ML models (Microsoft Presidio and LLM Guard). These models — approximately 780MB total (spaCy ~40MB, DeBERTa ~738MB) — are downloaded automatically on first use and cached locally. No data is sent to any external service during this download or during scanning.
+> **Note on first run:** Rampart's built-in guards use local ML models (Microsoft Presidio for PII, and a DeBERTa-v3 classifier for prompt injection, loaded directly via `transformers`). These models — approximately 780MB total (spaCy ~40MB, DeBERTa ~738MB) — are downloaded automatically on first use and cached locally. No data is sent to any external service during this download or during scanning.
 
-**Requires Python 3.10, 3.11, or 3.12 — Python 3.11 recommended. Python 3.13 not yet supported.**
+**Requires Python 3.10, 3.11, 3.12, or 3.13.**
 
 ---
 
@@ -766,7 +755,7 @@ MIT — see [LICENSE](LICENSE).
 Rampart stands on the shoulders of excellent open source work:
 
 - [Microsoft Presidio](https://github.com/microsoft/presidio) — PII detection and anonymisation
-- [LLM Guard](https://github.com/protectai/llm-guard) — input and output scanners
+- [ProtectAI](https://huggingface.co/protectai/deberta-v3-base-prompt-injection-v2) — the DeBERTa-v3 prompt-injection classifier, run directly via [Hugging Face `transformers`](https://github.com/huggingface/transformers)
 - [Open Policy Agent](https://www.openpolicyagent.org/) — the architectural inspiration
 
 ---
