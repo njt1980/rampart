@@ -53,6 +53,16 @@ Issues = "https://github.com/njt1980/rampart/issues"
 [tool.hatch.build.targets.wheel]
 packages = ["rampart"]
 
+[tool.hatch.build.targets.sdist]
+exclude = [
+    "demo_env",
+    "test_env",
+    "py313_test_env",
+    "try_rampart.py",
+    "policy.yaml",
+    "*.log",
+]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]

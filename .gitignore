@@ -1,6 +1,8 @@
 # Virtual environments
 venv/
 test_env/
+demo_env/
+py313_test_env/
 
 # Build artifacts
 dist/
