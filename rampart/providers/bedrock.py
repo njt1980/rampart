@@ -48,8 +48,10 @@ class BedrockProvider(BaseProvider):
         """Invoke a Bedrock model via the Converse API.
 
         Args:
-            model_id: Bedrock model identifier, e.g.
-                      ``"anthropic.claude-3-5-sonnet-20241022-v2:0"``.
+            model_id: Bedrock cross-region inference profile ID, e.g.
+                      ``"us.anthropic.claude-sonnet-4-6"``. Newer Claude
+                      models require the ``us.`` prefix — bare model IDs
+                      raise a ValidationException from Bedrock.
             messages: List of message dicts with 'role' and 'content'
                       keys. String content is converted to Converse format
                       automatically.

@@ -28,7 +28,7 @@ client = Rampart(
 )
 
 response = client.invoke(
-    model_id="anthropic.claude-sonnet-4-6",
+    model_id="us.anthropic.claude-sonnet-4-6",
     messages=[{"role": "user", "content": user_input}],
     profile="customer_support"
 )
@@ -234,6 +234,8 @@ profiles:
 
 ### Step 4: Write Your Application Code
 
+> **AWS Bedrock model IDs:** Newer Claude models require a cross-region inference profile ID — prefix the model ID with `us.` (e.g. `us.anthropic.claude-sonnet-4-6`). Using the bare model ID (without `us.`) will return a `ValidationException: on-demand throughput isn't supported` error from Bedrock. You can find available inference profile IDs in the [Bedrock console](https://console.aws.amazon.com/bedrock/) under **Cross-region inference**.
+
 ```python
 from rampart import Rampart
 from rampart.exceptions import PolicyViolationError
@@ -250,7 +252,7 @@ client.warmup("customer_facing")
 def ask_llm(user_message: str) -> str:
     try:
         response = client.invoke(
-            model_id="anthropic.claude-sonnet-4-6",
+            model_id="us.anthropic.claude-sonnet-4-6",
             messages=[{"role": "user", "content": user_message}],
             profile="customer_facing"
         )
@@ -334,7 +336,7 @@ profiles:
           uncertainty_band: [0.4, 0.8]
           llm:
             provider: bedrock
-            model_id: anthropic.claude-haiku-4-5-20251001
+            model_id: us.anthropic.claude-haiku-4-5-20251001-v1:0
             max_tokens: 10
 
     output:
@@ -379,7 +381,7 @@ client.warmup("customer_support")
 def handle_customer_message(message: str, user_id: str) -> str:
     try:
         response = client.invoke(
-            model_id="anthropic.claude-sonnet-4-6",
+            model_id="us.anthropic.claude-sonnet-4-6",
             messages=[{"role": "user", "content": message}],
             profile="customer_support",
             user_id=user_id
@@ -453,7 +455,7 @@ Every guard supports three execution modes. Set it per guard in the policy YAML.
     uncertainty_band: [0.4, 0.8]
     llm:
       provider: bedrock
-      model_id: anthropic.claude-haiku-4-5-20251001
+      model_id: us.anthropic.claude-haiku-4-5-20251001-v1:0
 ```
 
 Hybrid mode runs the local classifier first. If the confidence score is clearly high or clearly low, it decides immediately. Only ambiguous cases go to the LLM judge. This keeps average latency low while maintaining accuracy on edge cases.
@@ -499,7 +501,7 @@ Every request and response is logged with full policy evaluation detail. This is
   "policy_version":   "1.0.0",
   "profile":          "customer_support",
   "provider":         "bedrock",
-  "model_id":         "anthropic.claude-sonnet-4-6",
+  "model_id":         "us.anthropic.claude-sonnet-4-6",
   "direction":        "input",
   "guard_results": [
     {
@@ -557,7 +559,7 @@ client = Rampart(
 
 try:
     response = client.invoke(
-        model_id="anthropic.claude-sonnet-4-6",
+        model_id="us.anthropic.claude-sonnet-4-6",
         messages=[{"role": "user", "content": user_input}],
         profile="customer_support"
     )
@@ -686,7 +688,7 @@ The `context` dict available inside `scan()` contains:
     "policy_version":  "1.0.0",
     "profile":         "customer_support",
     "provider":        "bedrock",
-    "model_id":        "anthropic.claude-sonnet-4-6",
+    "model_id":        "us.anthropic.claude-sonnet-4-6",
     "direction":       "input",    # or "output"
     "timestamp":       "2026-06-03T10:24:51Z"
 }
